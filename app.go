@@ -22,9 +22,23 @@ func NewGitLabClient(token string) *GitLabClient {
 	return &GitLabClient{client}
 }
 
-func (gc *GitLabClient) ListGroupProjects(groupID string) ([]*gitlab.Project, error) {
-	// List projects within the group
-	projects, _, err := gc.client.Groups.ListGroupProjects(groupID, nil)
+type ListOptions struct {
+	Page    int `url:"page,omitempty" json:"page,omitempty"`
+	PerPage int `url:"per_page,omitempty" json:"per_page,omitempty"`
+}
+type ListGroupProjectsOptions struct {
+	ListOptions
+	Topic *string `url:"topic,omitempty" json:"topic,omitempty"`
+}
+
+func (gc *GitLabClient) ListGroupProjects(groupID string, topic *string) ([]*gitlab.Project, error) {
+	// List projects within the group with specified options
+	projects, _, err := gc.client.Groups.ListGroupProjects(groupID, &gitlab.ListGroupProjectsOptions{
+		ListOptions: gitlab.ListOptions{
+			PerPage: 100,
+		},
+		Topic: topic,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -39,9 +53,10 @@ func main() {
 	}
 
 	gitlab := NewGitLabClient(token)
-	fmt.Println(gitlab)
 
-	projects, err := gitlab.ListGroupProjects("12")
+	topic := "python"
+
+	projects, err := gitlab.ListGroupProjects("12", &topic)
 	if err != nil {
 		log.Fatalf("Failed to list group projects: %v", err)
 	}
