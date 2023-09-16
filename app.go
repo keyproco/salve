@@ -22,6 +22,15 @@ func NewGitLabClient(token string) *GitLabClient {
 	return &GitLabClient{client}
 }
 
+func (gc *GitLabClient) ListGroupProjects(groupID string) ([]*gitlab.Project, error) {
+	// List projects within the group
+	projects, _, err := gc.client.Groups.ListGroupProjects(groupID, nil)
+	if err != nil {
+		return nil, err
+	}
+	return projects, nil
+}
+
 func main() {
 	token := "glpat-GbKUURYm8xVF9TFrPR3B"
 	//"os.Getenv("GITLAB_TOKEN")
@@ -32,7 +41,7 @@ func main() {
 	gitlab := NewGitLabClient(token)
 	fmt.Println(gitlab)
 
-	projects, _, err := gitlab.client.Groups.ListGroupProjects("12", nil)
+	projects, err := gitlab.ListGroupProjects("12")
 	if err != nil {
 		log.Fatalf("Failed to list group projects: %v", err)
 	}
