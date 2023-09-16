@@ -5,7 +5,7 @@ Projects:
     go:
         ☐ Make filtering by Topic optional @low
         ☐ Use Env variable instead of plaintext PAT
-        ☐ Exclude unwanted repositories within the specified group
+        ☐ Refactor the exclusion method
         ☐ Format data to a map variable
     build:
         ☐ Dockerize the app @low
@@ -13,5 +13,6 @@ Projects:
         ✔ Authentication to gitlab api@critical @high
         ✔ Get all projects within a group  @high
         ✔ Filter projects by Topic  @high
+        ✔ Exclude unwanted repositories within the specified group by Project ID or repo whatever @high
     Cancelled:
 #      ✘ 

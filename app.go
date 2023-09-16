@@ -31,7 +31,7 @@ type ListGroupProjectsOptions struct {
 	Topic *string `url:"topic,omitempty" json:"topic,omitempty"`
 }
 
-func (gc *GitLabClient) ListGroupProjects(groupID string, topic *string) ([]*gitlab.Project, error) {
+func (gc *GitLabClient) ListGroupProjects(groupID string, topic *string, excludeProjectIDs []int) ([]*gitlab.Project, error) {
 	// List projects within the group with specified options
 	projects, _, err := gc.client.Groups.ListGroupProjects(groupID, &gitlab.ListGroupProjectsOptions{
 		ListOptions: gitlab.ListOptions{
@@ -42,7 +42,22 @@ func (gc *GitLabClient) ListGroupProjects(groupID string, topic *string) ([]*git
 	if err != nil {
 		return nil, err
 	}
-	return projects, nil
+
+	filteredProjects := []*gitlab.Project{}
+	contains := func(excludeProjectIDs []int, id int) bool {
+		for _, id_to_exclude := range excludeProjectIDs {
+			if id_to_exclude == id {
+				return true
+			}
+		}
+		return false
+	}
+	for _, project := range projects {
+		if !contains(excludeProjectIDs, project.ID) {
+			filteredProjects = append(filteredProjects, project)
+		}
+	}
+	return filteredProjects, nil
 }
 
 func main() {
@@ -54,9 +69,10 @@ func main() {
 
 	gitlab := NewGitLabClient(token)
 
-	topic := "python"
+	topic := ""
+	excludeProjectIDs := []int{5}
+	projects, err := gitlab.ListGroupProjects("12", &topic, excludeProjectIDs)
 
-	projects, err := gitlab.ListGroupProjects("12", &topic)
 	if err != nil {
 		log.Fatalf("Failed to list group projects: %v", err)
 	}
