@@ -61,15 +61,18 @@ func (gc *GitLabClient) ListGroupProjects(groupID string, topic *string, exclude
 	return filteredProjects, nil
 }
 
-func CreateFileIfNotExists() {
-	terraformFile := "./terraform/terraform.tfvars"
+type File struct {
+	Path string
+}
 
-	file, err := os.Create(terraformFile)
+func (f *File) CreateFileIfNotExists() (*File, error) {
+	file, err := os.Create(f.Path)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
 	log.Printf("tfvars file created")
+	return f, nil
 }
 
 func main() {
@@ -85,7 +88,10 @@ func main() {
 	excludeProjectIDs := []int{5}
 	projects, err := gitlab.ListGroupProjects("12", &topic, excludeProjectIDs)
 
-	CreateFileIfNotExists()
+	terraformFile := "./terraform/terraform.tfvars"
+
+	fileManager := File{Path: terraformFile}
+	fileManager.CreateFileIfNotExists()
 
 	if err != nil {
 		log.Fatalf("Failed to list group projects: %v", err)
