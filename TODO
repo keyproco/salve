@@ -10,6 +10,7 @@ Projects:
     build:
         ☐ Dockerize the app @low
     Done:
+        ✔ Check if the file is Empty
         ✔ Feature check if file exists
         ✔ Authentication to gitlab api@critical @high
         ✔ Get all projects within a group  @high

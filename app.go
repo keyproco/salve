@@ -65,14 +65,29 @@ type File struct {
 	Path string
 }
 
-func (f *File) CreateFileIfNotExists() (*File, error) {
+func (f *File) CreateFileIfNotExists() *File {
 	file, err := os.Create(f.Path)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
 	log.Printf("tfvars file created")
-	return f, nil
+	return f
+}
+
+func (f *File) isEmpty() (bool, error) {
+	file, err := os.Open(f.Path)
+	if err != nil {
+		return false, err
+	}
+	defer file.Close()
+
+	stat, err := file.Stat()
+	if err != nil {
+		return false, err
+	}
+
+	return stat.Size() == 0, nil
 }
 
 func main() {
@@ -90,8 +105,16 @@ func main() {
 
 	terraformFile := "./terraform/terraform.tfvars"
 
-	fileManager := File{Path: terraformFile}
-	fileManager.CreateFileIfNotExists()
+	isEmpty, err := (&File{Path: terraformFile}).CreateFileIfNotExists().isEmpty()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if isEmpty {
+		log.Printf("The file is empty.")
+	} else {
+		log.Printf("The file is not empty.")
+	}
 
 	if err != nil {
 		log.Fatalf("Failed to list group projects: %v", err)
