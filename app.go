@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/xanzy/go-gitlab"
 )
@@ -60,6 +61,17 @@ func (gc *GitLabClient) ListGroupProjects(groupID string, topic *string, exclude
 	return filteredProjects, nil
 }
 
+func CreateFileIfNotExists() {
+	terraformFile := "./terraform/terraform.tfvars"
+
+	file, err := os.Create(terraformFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	log.Printf("tfvars file created")
+}
+
 func main() {
 	token := "glpat-GbKUURYm8xVF9TFrPR3B"
 	//"os.Getenv("GITLAB_TOKEN")
@@ -72,6 +84,8 @@ func main() {
 	topic := ""
 	excludeProjectIDs := []int{5}
 	projects, err := gitlab.ListGroupProjects("12", &topic, excludeProjectIDs)
+
+	CreateFileIfNotExists()
 
 	if err != nil {
 		log.Fatalf("Failed to list group projects: %v", err)
