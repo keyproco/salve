@@ -57,4 +57,4 @@ Temporary Items
 # iCloud generated files
 *.icloud
 
-./terraform/*
+/terraform/*
