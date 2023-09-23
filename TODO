@@ -7,9 +7,11 @@ Projects:
         ☐ Use Env variable instead of plaintext PAT
         ☐ Refactor the exclusion method
         ☐ Format data to a map variable
+        ☐ clean terraform.tfvars
     build:
         ☐ Dockerize the app @low
     Done:
+        ✔ fill the data in terraform.tfvars
         ✔ Check if the file is Empty
         ✔ Feature check if file exists
         ✔ Authentication to gitlab api@critical @high

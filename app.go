@@ -65,6 +65,11 @@ type File struct {
 	Path string
 }
 
+type Project struct {
+	ID   int
+	Name string
+}
+
 func (f *File) CreateFileIfNotExists() *File {
 
 	_, err := os.Stat(f.Path)
@@ -124,6 +129,22 @@ func main() {
 	if isEmpty {
 		log.Printf("The file is empty.")
 		log.Printf("Updating the tfvars file")
+
+		file, err := os.OpenFile(terraformFile, os.O_APPEND|os.O_WRONLY, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer file.Close()
+
+		fmt.Fprintln(file, "projects = {")
+		for _, project := range projects {
+			fmt.Fprintf(file, `  "%s" = {
+    id = %d
+  }
+`, project.Name, project.ID)
+		}
+		fmt.Fprintln(file, "}")
+
 	} else {
 		log.Printf("The file is not empty.")
 		log.Printf("Cleaning the file before updating it")
