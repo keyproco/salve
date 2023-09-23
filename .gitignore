@@ -62,4 +62,4 @@ Temporary Items
 !/terraform/groups.tf
 !/terraform/repositories.tf
 !/terraform/variable.tf
-!/terraform/hello_world.txt
+!/terraform/say_hello_world.txt
