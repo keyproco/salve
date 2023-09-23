@@ -1,14 +1,14 @@
-projects = {
+repos = {
   "api-5" = {
-    id = 7
+    id = 15
   }
   "api-4" = {
-    id = 6
+    id = 14
   }
   "api-2" = {
-    id = 4
+    id = 13
   }
   "api-1" = {
-    id = 3
+    id = 12
   }
 }

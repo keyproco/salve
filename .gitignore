@@ -58,3 +58,8 @@ Temporary Items
 *.icloud
 
 /terraform/*
+!/terraform/provider.tf
+!/terraform/groups.tf
+!/terraform/repositories.tf
+!/terraform/variable.tf
+!/terraform/hello_world.txt
