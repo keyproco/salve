@@ -66,12 +66,23 @@ type File struct {
 }
 
 func (f *File) CreateFileIfNotExists() *File {
-	file, err := os.Create(f.Path)
-	if err != nil {
-		log.Fatal(err)
+
+	_, err := os.Stat(f.Path)
+
+	if err == nil {
+		fmt.Printf("File %s exists!\n", f.Path)
+	} else if os.IsNotExist(err) {
+		fmt.Printf("File %s does not exist.\n", f.Path)
+		file, err := os.Create(f.Path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer file.Close()
+		log.Printf("tfvars file created")
+
+	} else {
+		fmt.Printf("Error checking if file exists: %s", err)
 	}
-	defer file.Close()
-	log.Printf("tfvars file created")
 	return f
 }
 
@@ -112,8 +123,11 @@ func main() {
 
 	if isEmpty {
 		log.Printf("The file is empty.")
+		log.Printf("Updating the tfvars file")
 	} else {
 		log.Printf("The file is not empty.")
+		log.Printf("Cleaning the file before updating it")
+
 	}
 
 	if err != nil {
