@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 
 	"github.com/xanzy/go-gitlab"
 )
@@ -136,7 +137,10 @@ func main() {
 		}
 		defer file.Close()
 
-		fmt.Fprintln(file, "projects = {")
+		fmt.Fprintln(file, "repos = {")
+		if err != nil {
+			log.Fatalf("Error getting current working directory: %s", err)
+		}
 		for _, project := range projects {
 			fmt.Fprintf(file, `  "%s" = {
     id = %d
@@ -145,6 +149,33 @@ func main() {
 		}
 		fmt.Fprintln(file, "}")
 
+		originalDir, err := os.Getwd()
+		if err != nil {
+			log.Fatalf("Error getting current working directory: %s", err)
+		}
+
+		if err := os.Chdir("terraform"); err != nil {
+			log.Fatalf("Error changing directory: %s", err)
+		}
+
+		for _, project := range projects {
+			cmd := exec.Command("terraform", "import",
+				fmt.Sprintf("gitlab_project.project[\"%s\"]", project.Name),
+				fmt.Sprintf("%d", project.ID))
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+
+			err := cmd.Run()
+			if err != nil {
+				log.Fatalf("Error running terraform import: %s", err)
+			}
+		}
+
+		if err := os.Chdir(originalDir); err != nil {
+			log.Fatalf("Error changing back to original directory: %s", err)
+		}
+
+		fmt.Println("Updating terraform state completed")
 	} else {
 		log.Printf("The file is not empty.")
 		log.Printf("Cleaning the file before updating it")

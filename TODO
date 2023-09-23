@@ -8,9 +8,12 @@ Projects:
         ☐ Refactor the exclusion method
         ☐ Format data to a map variable
         ☐ clean terraform.tfvars
+        ☐ refactor the code (importing the state and filling the date within the terraform.tfvars file)
+        ☐ README.md
     build:
         ☐ Dockerize the app @low
     Done:
+        ✔ import the state of all the selected projects
         ✔ fill the data in terraform.tfvars
         ✔ Check if the file is Empty
         ✔ Feature check if file exists
