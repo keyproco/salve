@@ -1,18 +1,19 @@
 credits for 5G aaaa[y]men :)
 Projects:
-    ☐ Interact with Gitlab api
   Todos:
     go:
         ☐ Make filtering by Topic optional @low
         ☐ Use Env variable instead of plaintext PAT
         ☐ Refactor the exclusion method
-        ☐ Format data to a map variable
         ☐ clean terraform.tfvars
         ☐ refactor the code (importing the state and filling the date within the terraform.tfvars file)
+        ☐ import gitlab groups @high otherwise you need to comment projects.tf file
         ☐ README.md
     build:
         ☐ Dockerize the app @low
     Done:
+        ✔ Interact with Gitlab api
+        ✔ Format data to a map variable
         ✔ import the state of all the selected projects
         ✔ fill the data in terraform.tfvars
         ✔ Check if the file is Empty
